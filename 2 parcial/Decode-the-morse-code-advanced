@@ -1,0 +1,42 @@
+import re
+from math import gcd
+from functools import reduce
+
+def decodeBits(bits):
+    bits = bits.strip('0')
+    groups = re.findall(r'1+|0+', bits)
+    lengths = [len(g) for g in groups]
+    unit = reduce(gcd, lengths)
+    morse = ''
+    for g in groups:
+        length = len(g) // unit
+        if g[0] == '1':
+            if length == 1:
+                morse += '.'
+            elif length == 3:
+                morse += '-'
+            else:
+                morse += '.' * length  
+        else:
+            if length == 1:
+                morse += ''  
+            elif length == 3:
+                morse += ' '
+            elif length == 7:
+                morse += '   '
+            else:
+                morse += ' ' * (length // 3)
+    return morse
+
+
+from preloaded import MORSE_CODE
+
+def decode_morse(morse_code):
+    morse_code = morse_code.strip()
+    palabras = morse_code.split('   ')
+    resultado = []
+    for palabra in palabras:
+        letras = palabra.split(' ')
+        palabra = ''.join(MORSE_CODE[letra] for letra in letras)
+        resultado.append(palabra)
+    return ' '.join(resultado)
